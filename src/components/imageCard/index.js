@@ -1,7 +1,6 @@
 import React from "react";
 
 const ImageCard = (props) => {
-  console.log("hi props", props.images);
 
   return (
     <>
