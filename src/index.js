@@ -1,21 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider} from "react-redux";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 
-import App from './components/App';
-import * as serviceWorker from './serviceWorker';
+import App from "./containers/App";
+import * as serviceWorker from "./serviceWorker";
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(composeEnhancers(applyMiddleware()));
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose ;
- const store=createStore(composeEnhancers(applyMiddleware()));
-
-
- ReactDOM.render(
-    <Provider store={store}>
+ReactDOM.render(
+  <Provider store={store}>
     <App />
-    </Provider>
-    , document.querySelector('#root'));
+  </Provider>,
+  document.querySelector("#root")
+);
 
 // ReactDOM.render(<App />, document.getElementById('root'));
 
