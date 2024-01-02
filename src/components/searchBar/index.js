@@ -1,99 +1,54 @@
-import React from 'react';
-import unsplash from '../../api/unsplash';
-import ImgList from '../imageCard';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ImageCard from "../imageCard";
+import { getSearchImages } from "../../store/slices/modifyImage/thunk";
 
+const SearchBar = () => {
+  const dispatch = useDispatch();
+  const [query, setQuery] = useState("");
+  const {
+    modifyImage: { searchResultList },
+  } = useSelector((state) => state);
+  //   const searchResultList = JSON.parse(localStorage.getItem("searchResultList"));
+  //   console.log("hi", query, "modifyImage", searchResultList);
 
-class SearchBar extends  React.Component {
+  return (
+    <div className="container">
+      <form
+        className="ui form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          dispatch(getSearchImages({ query }));
+        }}
+      >
+        <div className="ui feild">
+          <div className="d-flex justify-content-between pt-5">
+            <h1>Find Your Image</h1>
+            <span>{searchResultList?.length || 0} photos</span>
+          </div>
+          <input
+            placeholder="find your image"
+            className="mb-5"
+            type="text"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
+          />
+        </div>
+      </form>
 
-    state={
-         term : '',
-         image : []
-                };
-
-    // onInputChange (event) {
-    //     console.log(event.target.value)
-    // }
-
-    // onInputClick () {
-    //     console.log("input is clicked")
-    // }
-
-    // onFormSubmit (e) {
-    //     e.preventDefault();    
-    // }
-
-    // onSearchSubmit (term,e) {
-    //     e.preventDefault();
-    //     console.log("merna")
-    //  Axios.get('https://api.unsplash.com/search/photos',{
-    //     params : {query : term},
-    //     headers : {
-    //         Authorization : "Client-ID f4dc7847bbd7f137bf595ea40c9901bc7ae7873695de0ee50d4265ef5081da56", 
-    //     }  
-    //  });
-    // }
-
-    render(){
-        return (
-            <div className='ui segment ui container style={{marginTop : "10px"}}'>
-                <form
-                    className='ui form'
-                    
-                    // onSubmit ={ (e,term)=> {
-                    //     e.preventDefault()
-                    //     Axios.get('https://api.unsplash.com/search/photos',{
-                    //         params : {query : this.state.term},
-                    //         headers : {
-                    //             Authorization : "Client-ID f4dc7847bbd7f137bf595ea40c9901bc7ae7873695de0ee50d4265ef5081da56", 
-                    //         }  
-                    //      }).then(
-                    //       (res) => {console.log(res)}
-                    //      )
-                    //     }}
-
-
-                    onSubmit ={ async (e,term)=> {
-                        e.preventDefault()
-                        //   const response = await Axios.get('https://api.unsplash.com/search/photos',{
-                        //     params : {query : this.state.term},
-                        //     headers : {
-                        //         Authorization : "Client-ID f4dc7847bbd7f137bf595ea40c9901bc7ae7873695de0ee50d4265ef5081da56", 
-                        //     }  
-                        //  });
-
-                        const response = await unsplash.get('/search/photos',{
-                            params : {query : this.state.term},
-                           
-                         });
-                          console.log(response)
-                          this.setState({image :response.data.results});
-                         
-                        }}
-                >
-                    <div className='ui feild'>
-                        <label>Image Search</label>
-                        {/* <input type='text' onClick={this.onInputClick} onChange={this.onInputChange}/> */}
-                        <input
-                            type="text"
-                            value={this.state.term}
-                            onChange={(e) => {
-                                this.setState({ term: e.target.value})
-                                console.log("hi", this.state.term)
-                            }}
-                        />
-                    </div>
-                </form>
-
-                <div>
-                    Found : {this.state.image.length} photos
-                </div>
-                 
-                <ImgList images={this.state.image} />
-
-            </div>
-        );
-    }
-
-}
+      <div className="row">
+        {searchResultList?.length ? (
+          searchResultList?.map((img) => {
+            return <ImageCard image={img} />;
+          })
+        ) : (
+          <p className="p-5 text-center">No data found</p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default SearchBar;
