@@ -1,6 +1,10 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { useDispatch } from'react-redux';
+import { resizeImage } from "../../store/slices/modifyImage/thunk"
+
 const ScaleImage = () => {
+  const dispatch = useDispatch();
   const { state } = useLocation();
   const { imgUrl } = state;
 
@@ -22,7 +26,9 @@ const ScaleImage = () => {
             placeholder="Enter Height"
             class="form-control"
           />
-          <span class="input-group-text">Scale image</span>
+          <span class="input-group-text" onClick={() => {
+              dispatch(resizeImage({ imgUrl, width:100, height:100 }));
+          }}>Scale image</span>
         </div>
       </div>
       <div className="d-flex align-items-center justify-content-center">
